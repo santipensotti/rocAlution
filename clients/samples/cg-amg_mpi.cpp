@@ -70,7 +70,14 @@ int main(int argc, char* argv[])
     GlobalMatrix<ValueType> mat;
 
     // Distribute matrix - lmat will be destroyed
+    int time_distribute = rocalution_time();
     distribute_matrix(&comm, &lmat, &mat, &manager);
+    
+    if(rank == 0)
+    {
+        time_distribute = rocalution_time() - time_distribute;
+        std::cout << "Solving: " << time_distribute / 1e6 << " sec" << std::endl;
+    }
 
     // rocALUTION vectors
     GlobalVector<ValueType> rhs(manager);
